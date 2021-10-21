@@ -24,11 +24,14 @@ class spectrum:
 	def set_counts(self, energy: int, counts: float):
 		self.spectrum_data[energy] = counts
 
-	def subtract_spectrum(self, spec='spectrum'):
-		if self.count_time != spec.count_time:
+	# Add/subtract another spectrum from this one with optional scaling factor
+	def add_spectrum(self, spec: 'spectrum', factor: float = 1.0, force: bool = False):
+
+		if not force and (self.count_time != spec.count_time):
 			msg = "Different count_time values (" + str(self.count_time)
 			msg += " vs " + str(spec.count_time) + "). "
 			msg += "Set force=True to enforce subtraction."
 			raise ValueError(msg)
+
 		for e, c in spec.spectrum_data.items():
-			self.spectrum_data[e] -= c
+			self.spectrum_data[e] += factor * c
