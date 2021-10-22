@@ -1,1 +1,1 @@
-from .core import * # noqa
+from .spectrum import * # noqa
