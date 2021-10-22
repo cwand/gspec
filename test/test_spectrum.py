@@ -1,6 +1,7 @@
 import unittest
 import gspec
 from pathlib import Path
+import numpy as np
 
 
 class TestSpectrum(unittest.TestCase):
@@ -184,3 +185,16 @@ class TestImport(unittest.TestCase):
 		self.assertEqual(s.get_counts([63]), 601.89345)
 		self.assertEqual(s.get_counts([371]), 53.05888)
 		self.assertEqual(s.get_counts([600]), 0.0)
+
+	def test_import_numpy(self):
+		n = np.array([[10, 231.0], [11, 232.2], [12, 0.0], [13, 2.0]])
+		s = gspec.import_numpy(n)
+
+		self.assertEqual(s.count_time, 0.0)
+		self.assertEqual(s.count_time_units, 's')
+		self.assertEqual(s.energy_units, 'keV')
+		self.assertEqual(len(s.spectrum_data), 4)
+		self.assertEqual(s.get_counts([10]), 231.0)
+		self.assertEqual(s.get_counts([11]), 232.2)
+		self.assertEqual(s.get_counts([12]), 0.0)
+		self.assertEqual(s.get_counts([13]), 2.0)

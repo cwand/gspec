@@ -2,14 +2,20 @@ from typing import DefaultDict
 from collections import defaultdict
 from typing import List
 import numpy as np
+import numpy.typing as npt
 import os
 
 
 class gspectrum:
 
-	def __init__(self):
+	energy_units: str
+	count_time: float
+	count_time_units: str
+	spectrum_data: DefaultDict[int, float]
+
+	def __init__(self) -> None:
 		self.energy_units = 'keV'
-		self.spectrum_data: DefaultDict[int, float] = defaultdict(float)
+		self.spectrum_data = defaultdict(float)
 
 		self.count_time = 0.0
 		self.count_time_units = 's'
@@ -27,11 +33,11 @@ class gspectrum:
 		return self.get_counts(energies) / self.count_time
 
 	# Set the number of counts in a specified bin of the spectrum
-	def set_counts(self, energy: int, counts: float):
+	def set_counts(self, energy: int, counts: float) -> None:
 		self.spectrum_data[energy] = counts
 
 	# Add/subtract another spectrum from this one with optional scaling factor
-	def add_spectrum(self, spec: 'gspectrum', factor: float = 1.0, force: bool = False):
+	def add_spectrum(self, spec: 'gspectrum', factor: float = 1.0, force: bool = False) -> None:
 
 		# Make sure spectra cannot be added with different count times unless forced
 		if not force and (self.count_time != spec.count_time):
@@ -46,7 +52,7 @@ class gspectrum:
 	# Export spectrum as a text file
 	# Exported spectrum will not contain gaps between integer energy values.
 	# Missing values will be 0-filled.
-	def print_txt(self, fp: str, force: bool = False):
+	def print_txt(self, fp: str, force: bool = False) -> None:
 
 		if not force and os.path.exists(fp):
 			msg = 'File ' + fp + ' already exists. Set force=True to overwrite'
@@ -83,4 +89,9 @@ def import_txt(fp: str) -> gspectrum:
 		header2 = f.readline().rstrip().split()
 		s.energy_units = header2[1][1:-1]
 
+	return s
+
+
+def import_numpy(data: npt.ArrayLike) -> gspectrum:
+	s = gspectrum()
 	return s
