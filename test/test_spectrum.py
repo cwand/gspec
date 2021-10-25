@@ -180,6 +180,12 @@ class TestImport(unittest.TestCase):
 		self.assertEqual(s.count_time_units, 'm')
 		self.assertEqual(s.energy_units, 'MeV')
 
+		x = s.spectrum_data
+		y = min(x)
+		yy = x[y]
+		self.assertIsInstance(y, np.int_)
+		self.assertIsInstance(yy, np.int_)
+
 		self.assertEqual(len(s.spectrum_data), 600)
 		self.assertEqual(s.get_counts([23]), 0.0)
 		self.assertEqual(s.get_counts([63]), 601.89345)
