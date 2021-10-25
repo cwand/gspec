@@ -198,3 +198,16 @@ class TestImport(unittest.TestCase):
 		self.assertEqual(s.get_counts([11]), 232.2)
 		self.assertEqual(s.get_counts([12]), 0.0)
 		self.assertEqual(s.get_counts([13]), 2.0)
+
+	def test_import_numpy_units(self):
+		n = np.array([[10, 231.0], [11, 232.2], [12, 0.0], [13, 2.0]])
+		s = gspec.import_numpy(n, count_time=30.2, count_time_units='m', energy_units='eV')
+
+		self.assertEqual(s.count_time, 30.2)
+		self.assertEqual(s.count_time_units, 'm')
+		self.assertEqual(s.energy_units, 'eV')
+		self.assertEqual(len(s.spectrum_data), 4)
+		self.assertEqual(s.get_counts([10]), 231.0)
+		self.assertEqual(s.get_counts([11]), 232.2)
+		self.assertEqual(s.get_counts([12]), 0.0)
+		self.assertEqual(s.get_counts([13]), 2.0)

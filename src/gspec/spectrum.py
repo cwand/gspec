@@ -92,6 +92,14 @@ def import_txt(fp: str) -> gspectrum:
 	return s
 
 
-def import_numpy(data: npt.ArrayLike) -> gspectrum:
+# Import spectrum from numpy-array
+def import_numpy(data: npt.NDArray[np.float_],
+		count_time: float = 0.0, count_time_units: str = 's',
+		energy_units: str = 'keV') -> gspectrum:
 	s = gspectrum()
+	s.count_time = count_time
+	s.count_time_units = count_time_units
+	s.energy_units = energy_units
+	for e, c in data:
+		s.set_counts(e, c)
 	return s
