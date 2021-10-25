@@ -1,6 +1,7 @@
 from typing import DefaultDict
 from collections import defaultdict
 from typing import List
+from typing import Tuple
 import numpy as np
 import numpy.typing as npt
 
@@ -29,4 +30,8 @@ def import_numpy(data: npt.NDArray[np.float_],
 	energy_units: str = ...
 ) -> gspectrum: ...
 
-def plot(spectrum: gspectrum, spectrum_string: str = ...) -> None: ...
+def plot(
+	spectrum: gspectrum, spectrum_string: str = ...,
+	windows: List[Tuple[float,float]] = ...,
+	bkg: gspectrum = ..., bkg_string: str = ...,
+	title: str = ...) -> None: ...

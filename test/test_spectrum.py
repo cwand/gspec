@@ -180,11 +180,12 @@ class TestImport(unittest.TestCase):
 		self.assertEqual(s.count_time_units, 'm')
 		self.assertEqual(s.energy_units, 'MeV')
 
+		# Check types of data in the array
 		x = s.spectrum_data
 		y = min(x)
 		yy = x[y]
-		self.assertIsInstance(y, np.int_)
-		self.assertIsInstance(yy, np.int_)
+		self.assertIsInstance(y, int)
+		self.assertIsInstance(yy, float)
 
 		self.assertEqual(len(s.spectrum_data), 600)
 		self.assertEqual(s.get_counts([23]), 0.0)
@@ -200,6 +201,13 @@ class TestImport(unittest.TestCase):
 		self.assertEqual(s.count_time_units, 's')
 		self.assertEqual(s.energy_units, 'keV')
 		self.assertEqual(len(s.spectrum_data), 4)
+
+		x = s.spectrum_data
+		y = min(x)
+		yy = x[y]
+		self.assertIsInstance(y, int)
+		self.assertIsInstance(yy, float)
+
 		self.assertEqual(s.get_counts([10]), 231.0)
 		self.assertEqual(s.get_counts([11]), 232.2)
 		self.assertEqual(s.get_counts([12]), 0.0)

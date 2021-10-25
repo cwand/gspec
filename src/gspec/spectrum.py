@@ -79,7 +79,7 @@ def import_txt(fp: str) -> gspectrum:
 	# Read spectrum part of file
 	spec_data = np.loadtxt(fp, delimiter='\t', skiprows=2)
 	for e, c in spec_data:
-		s.spectrum_data[e] = c
+		s.spectrum_data[int(e)] = c
 
 	# Read count time and units from the header
 	with open(fp, 'r') as f:
@@ -101,5 +101,5 @@ def import_numpy(data: npt.NDArray[np.float_],
 	s.count_time_units = count_time_units
 	s.energy_units = energy_units
 	for e, c in data:
-		s.set_counts(e, c)
+		s.set_counts(int(e), c)
 	return s
