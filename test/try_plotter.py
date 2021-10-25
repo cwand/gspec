@@ -1,6 +1,4 @@
 import gspec
-import sys
-
 
 def try_plot_a() -> None:
 
