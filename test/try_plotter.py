@@ -1,5 +1,6 @@
 import gspec
 
+
 def try_plot_a() -> None:
 
 	s = gspec.import_txt('test/spec_a2h6.txt')

@@ -4,6 +4,7 @@ from typing import List
 import numpy as np
 import numpy.typing as npt
 import os
+from datetime import date
 
 
 class gspectrum:
@@ -11,6 +12,7 @@ class gspectrum:
 	energy_units: str
 	count_time: float
 	count_time_units: str
+	meas_date: date
 	spectrum_data: DefaultDict[int, float]
 
 	def __init__(self) -> None:
@@ -19,6 +21,8 @@ class gspectrum:
 
 		self.count_time = 0.0
 		self.count_time_units = 's'
+
+		self.meas_date = date(1970, 1, 1)
 
 	# Get the total number of counts in a specified window of the spectrum
 	def get_counts(self, energies: List[int]) -> float:

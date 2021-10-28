@@ -4,6 +4,7 @@ from typing import List
 from typing import Tuple
 import numpy as np
 import numpy.typing as npt
+from datetime import date
 
 
 class gspectrum:
@@ -11,6 +12,7 @@ class gspectrum:
 	energy_units: str
 	count_time: float
 	count_time_units: str
+	meas_date: date
 	spectrum_data: DefaultDict[int, float]
 
 	def __init__(self) -> None: ...
