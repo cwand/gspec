@@ -44,11 +44,14 @@ class gspectrum:
 	def add_spectrum(self, spec: 'gspectrum', factor: float = 1.0, force: bool = False) -> None:
 
 		# Make sure spectra cannot be added with different count times unless forced
-		if not force and (self.count_time != spec.count_time):
-			msg = "Different count_time values (" + str(self.count_time)
-			msg += " vs " + str(spec.count_time) + "). "
-			msg += "Set force=True to enforce subtraction."
-			raise ValueError(msg)
+		count_time_ineq = (self.count_time != spec.count_time)
+		count_time_unit_ineq = (self.count_time_units != spec.count_time_units)
+		if not force and (count_time_ineq or count_time_unit_ineq):
+			raise ValueError(
+				f'Different count_time values ({self.count_time}{self.count_time_units} '
+				f'vs {spec.count_time}{spec.count_time_units}). '
+				f'Set force=True to enforce subtraction.'
+			)
 
 		for e, c in spec.spectrum_data.items():
 			self.spectrum_data[e] += factor * c
@@ -59,8 +62,7 @@ class gspectrum:
 	def print_txt(self, fp: str, force: bool = False) -> None:
 
 		if not force and os.path.exists(fp):
-			msg = 'File ' + fp + ' already exists. Set force=True to overwrite'
-			raise FileExistsError(msg)
+			raise FileExistsError(f'File {fp} already exists. Set force=True to overwrite.')
 
 		min_energy = min(self.spectrum_data.keys())
 		max_energy = max(self.spectrum_data.keys())
@@ -71,9 +73,7 @@ class gspectrum:
 			data_array[i, 1] = self.spectrum_data[min_energy + i]
 
 		np.savetxt(fp, data_array, fmt='%d\t%.5f', delimiter='\t', comments='',
-			header='{} {}\n'
-				'Energy [{}]\tCounts'.format(
-				self.count_time, self.count_time_units, self.energy_units))
+			header=f'{self.count_time} {self.count_time_units}\nEnergy [{self.energy_units}]\tCounts')
 
 
 # Import spectrum from saved text file

@@ -74,6 +74,37 @@ class TestSpectrum(unittest.TestCase):
 		s2.set_counts(510, 1.2)
 
 		self.assertRaises(ValueError, s1.add_spectrum, s2)
+		try:
+			s1.add_spectrum(s2)  # Should throw exception
+			self.fail()  # Should not reach this point
+		except ValueError as e:
+			self.assertEqual(str(e),
+				'Different count_time values (1.0s vs 0.0s). '
+				'Set force=True to enforce subtraction.')
+
+	def test_addition_error_wrong_count_time_units(self):
+		s1 = gspec.gspectrum()
+		s1.set_counts(509, 32.1)
+		s1.set_counts(510, 10.1)
+		s1.set_counts(511, 11.1)
+		s1.count_time = 1.0
+		s1.count_time_units = 'm'
+
+		s2 = gspec.gspectrum()
+		s2.set_counts(508, 1.0)
+		s2.set_counts(509, 1.1)
+		s2.set_counts(510, 1.2)
+		s2.count_time = 1.0
+		s2.count_time_units = 'h'
+
+		self.assertRaises(ValueError, s1.add_spectrum, s2)
+		try:
+			s1.add_spectrum(s2)  # Should throw exception
+			self.fail()  # Should not reach this point
+		except ValueError as e:
+			self.assertEqual(str(e),
+				'Different count_time values (1.0m vs 1.0h). '
+				'Set force=True to enforce subtraction.')
 
 	def test_addition_force_wrong_count_time(self):
 		s1 = gspec.gspectrum()
@@ -145,6 +176,13 @@ class TestSpectrum(unittest.TestCase):
 		s.set_counts(35, 2.0)
 		s.set_counts(37, 0.2)
 		self.assertRaises(FileExistsError, s.print_txt, 'test/spec_a3h7.txt')
+		try:
+			s.print_txt('test/spec_a3h7.txt')  # Should throw exception
+			self.fail()  # Should never reach here
+		except FileExistsError as e:
+			self.assertEqual(str(e),
+				'File test/spec_a3h7.txt already exists. Set force=True to overwrite.')
+
 		with open('test/spec_a3h7.txt', 'r') as f:
 			self.assertEqual(f.readline(), 'TESTESTEST\n')
 			self.assertEqual(f.readline(), '')
