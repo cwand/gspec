@@ -10,19 +10,20 @@ def read_mediso(fp: str) -> gspec.gspectrum:
 	file.write(ds[0x0009,0x10e6].value)
 
 	# Read data from virtual DICOM file
-	med_ds = pydicom.dcmread(file,force=True)
+	med_ds = pydicom.dcmread(file,force=True) # type: ignore
 	file.close()
 
+	print(med_ds)
 	x = med_ds[0x0040,0xa730]
-	y = x[1]
-	z = y[0x0040,0xa730]
-	a = z[0]
-	b = a[0x0040,0xa730]
-	c = b[2]
-	d = c[0x0009,0x10ea].value
-	s = d.decode('utf-8')
-	print(s)
+	x = x[1]
+	x = x[0x0040,0xa730] # type: ignore
+	x = x[0]
+	x = x[0x0040,0xa730] # type: ignore
+	x = x[2]
+	x = x[0x0009,0x10ea].value # type: ignore
+	s = x.decode('utf-8') # type: ignore
+	#print(s)
 
 
 
-	return 0.0
+	return gspec.gspectrum()
