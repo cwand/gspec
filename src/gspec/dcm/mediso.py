@@ -13,7 +13,6 @@ def read_mediso(fp: str) -> gspec.gspectrum:
 	med_ds = pydicom.dcmread(file,force=True) # type: ignore
 	file.close()
 
-	print(med_ds)
 	x = med_ds[0x0040,0xa730]
 	x = x[1]
 	x = x[0x0040,0xa730] # type: ignore
