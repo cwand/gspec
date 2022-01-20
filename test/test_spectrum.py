@@ -2,6 +2,7 @@ import unittest
 import gspec
 from pathlib import Path
 import numpy as np
+import datetime
 
 
 class TestSpectrum(unittest.TestCase):
@@ -14,6 +15,10 @@ class TestSpectrum(unittest.TestCase):
 		s = gspec.gspectrum()
 		self.assertEqual(s.count_time, 0.0)
 		self.assertEqual(s.count_time_units, 's')
+
+	def test_default_meas_date(self):
+		s = gspec.gspectrum()
+		self.assertEqual(s.meas_date, datetime.date(1970, 1, 1))
 
 	def test_default_data(self):
 		s = gspec.gspectrum()

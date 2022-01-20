@@ -3,6 +3,7 @@
 import gspec
 import pydicom
 import tempfile
+from datetime import date
 
 
 def read_mediso(fp: str) -> gspec.gspectrum:
@@ -11,10 +12,18 @@ def read_mediso(fp: str) -> gspec.gspectrum:
 
 	ds = pydicom.dcmread(fp)
 
-	spectrum.count_time = ds[0x0018, 0x1242].value  # Acquisition time in ms
-	spectrum.count_time_units = 'ms'
+	count_time_ms = ds[0x0018, 0x1242].value  # Acquisition time in ms
+	count_time_s = count_time_ms / 1000.0
+	spectrum.count_time = count_time_s
+	spectrum.count_time_units = 's'
 
 	spectrum.energy_units = 'keV'
+
+	# Extract date
+	date_string = ds[0x0008, 0x0012].value
+	# Convert to ISO-format "YYYY-MM-DD"
+	isostring = date_string[0:4] + '-' + date_string[4:6] + '-' + date_string[6:]
+	spectrum.meas_date = date.fromisoformat(isostring)
 
 	file = tempfile.SpooledTemporaryFile()
 	file.write(ds[0x0009, 0x10e6].value)  # This is where Mediso-private tags are
@@ -71,5 +80,9 @@ def read_mediso(fp: str) -> gspec.gspectrum:
 
 	# Read the spectrum string line by line
 	bins = s.split('\n')
+	for energy, rate in [a.split() for a in bins[:-1]]:
+		energy_int = round(float(energy))
+		counts = float(rate) * count_time_s
+		spectrum.set_counts(energy_int, counts)
 
 	return spectrum
