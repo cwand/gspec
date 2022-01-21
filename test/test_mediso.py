@@ -20,4 +20,16 @@ class TestMediso(unittest.TestCase):
 		self.assertEqual(s.meas_date, datetime.date(2021, 10, 13))
 
 	def test_spec_data(self):
-		self.assertEqual(0, 1 + 1)
+		s = gspec.dcm.read_mediso('test/00000001.dcm')
+		self.assertEqual(s.get_rate([0]), 0.0)
+		self.assertEqual(s.get_counts([0]), 0.0)
+		self.assertEqual(s.get_rate([24]), 0.0)
+		self.assertEqual(s.get_counts([24]), 0.0)
+		self.assertEqual(s.get_rate([25]), 0.047816)
+		self.assertEqual(s.get_counts([25]), 14.3448)
+		self.assertEqual(s.get_rate([172]), 16.815001)
+		self.assertEqual(s.get_counts([172]), 5044.5003)
+		self.assertEqual(s.get_rate([597]), 0.235407)
+		self.assertEqual(s.get_counts([597]), 70.6221)
+		self.assertEqual(s.get_rate([598]), 0.0)
+		self.assertEqual(s.get_counts([598]), 0.0)
