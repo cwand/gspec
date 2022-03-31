@@ -50,7 +50,7 @@ class gspectrum:
 			raise ValueError(
 				f'Different count_time values ({self.count_time}{self.count_time_units} '
 				f'vs {spec.count_time}{spec.count_time_units}). '
-				f'Set force=True to enforce subtraction.'
+				f'Set force=True to ignore.'
 			)
 
 		for e, c in spec.spectrum_data.items():
