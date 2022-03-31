@@ -1,14 +1,14 @@
 # type: ignore
 
-import gspec
+from .spectrum import gspectrum
 import pydicom
 import tempfile
 from datetime import date
 
 
-def read_mediso(fp: str) -> gspec.gspectrum:
+def read_mediso(fp: str) -> gspectrum:
 
-	spectrum = gspec.gspectrum()  # This will contain our resulting spectrum
+	spectrum = gspectrum()  # This will contain our resulting spectrum
 
 	ds = pydicom.dcmread(fp)
 
