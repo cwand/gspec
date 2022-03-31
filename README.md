@@ -1,6 +1,8 @@
 # gspec
 Python tool for working with gamma spectroscopy data
 
+![Tests](https://github.com/cwand/gspec/actions/workflows/tests.yml/badge.svg)
+
 ## Installation
 gpsc is most easily installed with pip:
 ```text
