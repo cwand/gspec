@@ -2,7 +2,7 @@ import unittest
 import gspec
 from pathlib import Path
 import numpy as np
-import datetime
+from datetime import date
 
 
 class TestSpectrum(unittest.TestCase):
@@ -18,7 +18,7 @@ class TestSpectrum(unittest.TestCase):
 
 	def test_default_meas_date(self):
 		s = gspec.gspectrum()
-		self.assertEqual(s.meas_date, datetime.date(1970, 1, 1))
+		self.assertEqual(s.meas_date, date(1970, 1, 1))
 
 	def test_default_data(self):
 		s = gspec.gspectrum()
@@ -85,7 +85,7 @@ class TestSpectrum(unittest.TestCase):
 		except ValueError as e:
 			self.assertEqual(str(e),
 				'Different count_time values (1.0s vs 0.0s). '
-				'Set force=True to enforce subtraction.')
+				'Set force=True to ignore.')
 
 	def test_addition_error_wrong_count_time_units(self):
 		s1 = gspec.gspectrum()
@@ -109,7 +109,7 @@ class TestSpectrum(unittest.TestCase):
 		except ValueError as e:
 			self.assertEqual(str(e),
 				'Different count_time values (1.0m vs 1.0h). '
-				'Set force=True to enforce subtraction.')
+				'Set force=True to ignore.')
 
 	def test_addition_force_wrong_count_time(self):
 		s1 = gspec.gspectrum()
@@ -156,12 +156,13 @@ class TestSpectrum(unittest.TestCase):
 		s.count_time = 15000.0
 		s.count_time_units = 'ms'
 		s.energy_units = 'eV'
+		s.meas_date = date(2000, 12, 13)
 		s.set_counts(34, 1.4)
 		s.set_counts(35, 2.0)
 		s.set_counts(37, 0.2)
 		s.print_txt('test/spec_a3h7.txt')
 		with open('test/spec_a3h7.txt', 'r') as f:
-			self.assertEqual(f.readline(), '15000.0 ms\n')
+			self.assertEqual(f.readline(), '15000.0 ms (2000-12-13)\n')
 			self.assertEqual(f.readline(), 'Energy [eV]\tCounts\n')
 			self.assertEqual(f.readline(), '34\t1.40000\n')
 			self.assertEqual(f.readline(), '35\t2.00000\n')
@@ -205,7 +206,7 @@ class TestSpectrum(unittest.TestCase):
 		s.set_counts(37, 0.2)
 		s.print_txt('test/spec_a3h7.txt', force=True)
 		with open('test/spec_a3h7.txt', 'r') as f:
-			self.assertEqual(f.readline(), '15000.0 ms\n')
+			self.assertEqual(f.readline(), '15000.0 ms (1970-01-01)\n')
 			self.assertEqual(f.readline(), 'Energy [eV]\tCounts\n')
 			self.assertEqual(f.readline(), '34\t1.40000\n')
 			self.assertEqual(f.readline(), '35\t2.00000\n')
@@ -222,6 +223,7 @@ class TestImport(unittest.TestCase):
 		self.assertEqual(s.count_time, 300.0)
 		self.assertEqual(s.count_time_units, 'm')
 		self.assertEqual(s.energy_units, 'MeV')
+		self.assertEqual(s.meas_date, date(2021, 11, 30))
 
 		# Check types of data in the array
 		x = s.spectrum_data

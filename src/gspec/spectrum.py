@@ -73,7 +73,8 @@ class gspectrum:
 			data_array[i, 1] = self.spectrum_data[min_energy + i]
 
 		np.savetxt(fp, data_array, fmt='%d\t%.5f', delimiter='\t', comments='',
-			header=f'{self.count_time} {self.count_time_units}\nEnergy [{self.energy_units}]\tCounts')
+			header=f'{self.count_time} {self.count_time_units} ({self.meas_date})\n'
+						f'Energy [{self.energy_units}]\tCounts')
 
 
 # Import spectrum from saved text file
@@ -90,6 +91,7 @@ def import_txt(fp: str) -> gspectrum:
 		header1 = f.readline().rstrip().split()
 		s.count_time = float(header1[0])
 		s.count_time_units = header1[1]
+		s.meas_date = date.fromisoformat(header1[2][1:11])
 		header2 = f.readline().rstrip().split()
 		s.energy_units = header2[1][1:-1]
 
