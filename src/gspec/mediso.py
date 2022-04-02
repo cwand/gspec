@@ -1,9 +1,10 @@
 # type: ignore
 
-from .spectrum import gspectrum
+from gspec import gspectrum
 import pydicom
 import tempfile
 from datetime import date
+import warnings
 
 
 def read_mediso(fp: str) -> gspectrum:
@@ -67,8 +68,10 @@ def read_mediso(fp: str) -> gspectrum:
 	for idx, sq_item in enumerate(x):
 		idx_info = sq_item[0x0040, 0xa043]
 		idx_info = idx_info[0]
-		if idx_info[0x0008, 0x0100].value == "Spectrum cps by keV":
-			spectrum_index = idx
+		with warnings.catch_warnings():
+			warnings.simplefilter("ignore", category=UserWarning)  # Ignore known warning below
+			if idx_info[0x0008, 0x0100].value == "Spectrum cps by keV":
+				spectrum_index = idx
 
 	x = x[spectrum_index]  # x is now the item containing the spectrum
 

@@ -239,8 +239,7 @@ class TestImport(unittest.TestCase):
 		self.assertEqual(s.get_counts([600]), 0.0)
 
 	def test_import_numpy(self):
-		n = np.array([[10, 231.0], [11, 232.2], [12, 0.0], [13, 2.0]])
-		s = gspec.import_numpy(n)
+		s = gspec.import_numpy(np.array([[10, 231.0], [11, 232.2], [12, 0.0], [13, 2.0]]))
 
 		self.assertEqual(s.count_time, 0.0)
 		self.assertEqual(s.count_time_units, 's')
@@ -259,8 +258,8 @@ class TestImport(unittest.TestCase):
 		self.assertEqual(s.get_counts([13]), 2.0)
 
 	def test_import_numpy_units(self):
-		n = np.array([[10, 231.0], [11, 232.2], [12, 0.0], [13, 2.0]])
-		s = gspec.import_numpy(n, count_time=30.2, count_time_units='m', energy_units='eV')
+		s = gspec.import_numpy(np.array([[10, 231.0], [11, 232.2], [12, 0.0], [13, 2.0]]),
+			count_time=30.2, count_time_units='m', energy_units='eV')
 
 		self.assertEqual(s.count_time, 30.2)
 		self.assertEqual(s.count_time_units, 'm')
